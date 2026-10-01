@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "witness-vault"
+version = "1.0.0"
+description = "Zero-install, air-gapped, self-decrypting HTML vaults."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+    { name = "Witness Vault Authors" }
+]
+keywords = [
+    "cryptography",
+    "aes-256-gcm",
+    "security",
+    "air-gapped",
+    "zero-install",
+    "self-decrypting",
+    "privacy",
+    "offline-vault"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security :: Cryptography",
+]
+dependencies = [
+    "cryptography>=41.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/witness-vault/witness-vault"
+Repository = "https://github.com/witness-vault/witness-vault.git"
+Issues = "https://github.com/witness-vault/witness-vault/issues"
+
+[project.scripts]
+witness-vault = "witness_vault.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

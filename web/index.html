@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Witness Vault | Air-Gapped Vault Builder</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --card-border: rgba(56, 189, 248, 0.18);
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.25);
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px var(--accent-glow);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 2.5rem 2rem 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .body {
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.35rem;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"], input[type="password"], textarea, select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    textarea {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    /* Drop Zone */
+    .drop-zone {
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.06);
+    }
+
+    .drop-zone svg {
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .drop-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .drop-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .selected-file-badge {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      color: #a7f3d0;
+      font-size: 0.85rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .security-specs {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .security-specs span {
+      color: #cbd5e1;
+      font-family: var(--mono);
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      background: #10b981;
+      color: #fff;
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo-badge">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <rect x="9" y="11" width="6" height="5" rx="1"></rect>
+          <path d="M10 11V9a2 2 0 1 1 4 0v2"></path>
+        </svg>
+      </div>
+      <h1 class="title">Witness Vault Builder</h1>
+      <p class="subtitle">Generate zero-install, air-gapped encrypted HTML capsules</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tabNote" onclick="switchMode('note')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        Secret Text / Note
+      </button>
+      <button class="tab-btn" id="tabFile" onclick="switchMode('file')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        Confidential File
+      </button>
+    </div>
+
+    <div class="body">
+      <form id="builderForm" onsubmit="sealAndDownload(event)">
+        
+        <!-- Text Note Input -->
+        <div class="form-group" id="groupText">
+          <label for="textContent">Payload Content <span>Plaintext or Markdown</span></label>
+          <textarea id="textContent" placeholder="Paste sensitive credentials, recovery seed phrase, private keys, or confidential notes..."></textarea>
+        </div>
+
+        <!-- File Upload Input -->
+        <div class="form-group" id="groupFile" style="display: none;">
+          <label>File to Encrypt <span>PDF, Image, Archive, Document, etc.</span></label>
+          <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <div class="drop-text">Drag &amp; drop file here, or click to browse</div>
+            <div class="drop-sub">File is encrypted directly in your browser memory before saving</div>
+          </div>
+          <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)">
+          <div class="selected-file-badge" id="selectedFileBadge">
+            <span id="selectedFileName">file.txt</span>
+            <span id="selectedFileSize">0 KB</span>
+          </div>
+        </div>
+
+        <!-- Common metadata -->
+        <div class="form-group">
+          <label for="vaultTitle">Vault Title</label>
+          <input type="text" id="vaultTitle" placeholder="e.g. Master Key Backup 2026" required>
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <label for="passphrase">Decryption Passphrase</label>
+            <input type="password" id="passphrase" placeholder="Strong password..." required>
+          </div>
+          <div class="form-group">
+            <label for="passphraseConfirm">Confirm Passphrase</label>
+            <input type="password" id="passphraseConfirm" placeholder="Repeat password..." required>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <label for="publicHint">Public Hint <span>Optional</span></label>
+            <input type="text" id="publicHint" placeholder="e.g. Favorite childhood street">
+          </div>
+          <div class="form-group">
+            <label for="roundsSelect">KDF Iterations</label>
+            <select id="roundsSelect">
+              <option value="600000" selected>600,000 rounds (OWASP High Standard)</option>
+              <option value="1000000">1,000,000 rounds (Paranoid Fortress)</option>
+              <option value="250000">250,000 rounds (Fast)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span id="btnSubmitText">Seal &amp; Download Standalone Vault</span>
+        </button>
+
+      </form>
+
+      <div class="security-specs">
+        <div>CIPHER: <span>AES-256-GCM</span></div>
+        <div>KDF: <span>PBKDF2-HMAC-SHA256</span></div>
+        <div>INTEGRITY: <span>SHA-256 SEAL</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Witness Vault is 100% open-source, air-gapped, and runs purely inside your browser.
+  </div>
+
+  <div class="toast" id="toast">Vault sealed &amp; downloaded!</div>
+
+  <script>
+    let currentMode = 'note';
+    let chosenFile = null;
+
+    function switchMode(mode) {
+      currentMode = mode;
+      document.getElementById('tabNote').classList.toggle('active', mode === 'note');
+      document.getElementById('tabFile').classList.toggle('active', mode === 'file');
+      document.getElementById('groupText').style.display = mode === 'note' ? 'block' : 'none';
+      document.getElementById('groupFile').style.display = mode === 'file' ? 'block' : 'none';
+    }
+
+    // Drag and drop handling
+    const dropZone = document.getElementById('dropZone');
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+    });
+    dropZone.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        setFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    function handleFileSelect(event) {
+      if (event.target.files && event.target.files.length > 0) {
+        setFile(event.target.files[0]);
+      }
+    }
+
+    function setFile(file) {
+      chosenFile = file;
+      document.getElementById('selectedFileName').textContent = file.name;
+      document.getElementById('selectedFileSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
+      document.getElementById('selectedFileBadge').style.display = 'flex';
+      if (!document.getElementById('vaultTitle').value) {
+        document.getElementById('vaultTitle').value = 'Vault: ' + file.name;
+      }
+    }
+
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return btoa(binary);
+    }
+
+    function bufferToHex(buf) {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function sealAndDownload(e) {
+      e.preventDefault();
+      const p1 = document.getElementById('passphrase').value;
+      const p2 = document.getElementById('passphraseConfirm').value;
+      if (p1 !== p2) {
+        alert('Passphrases do not match!');
+        return;
+      }
+
+      let payloadBytes;
+      let filename = null;
+      let mimeType = 'text/plain';
+
+      if (currentMode === 'note') {
+        const text = document.getElementById('textContent').value;
+        if (!text) { alert('Please enter note content.'); return; }
+        payloadBytes = new TextEncoder().encode(text);
+      } else {
+        if (!chosenFile) { alert('Please select a file to seal.'); return; }
+        payloadBytes = new Uint8Array(await chosenFile.arrayBuffer());
+        filename = chosenFile.name;
+        mimeType = chosenFile.type || 'application/octet-stream';
+      }
+
+      const submitBtn = document.getElementById('btnSubmit');
+      const submitText = document.getElementById('btnSubmitText');
+      submitBtn.disabled = true;
+      submitText.textContent = 'Encrypting & Sealing...';
+
+      try {
+        const title = document.getElementById('vaultTitle').value || 'Witness Vault';
+        const hint = document.getElementById('publicHint').value || '';
+        const iterations = parseInt(document.getElementById('roundsSelect').value, 10);
+        const salt = window.crypto.getRandomValues(new Uint8Array(16));
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+        // Compute SHA-256 seal of the raw payload
+        const sha256Buf = await window.crypto.subtle.digest('SHA-256', payloadBytes);
+        const sha256Hex = bufferToHex(sha256Buf);
+        const createdAt = new Date().toISOString();
+
+        // Inner envelope
+        const innerEnvelope = {
+          title: title,
+          filename: filename,
+          mime_type: mimeType,
+          created_at: createdAt,
+          sha256: sha256Hex,
+          data_b64: arrayBufferToBase64(payloadBytes)
+        };
+        const innerJsonBytes = new TextEncoder().encode(JSON.stringify(innerEnvelope));
+
+        // Derive AES key
+        const enc = new TextEncoder();
+        const baseKey = await window.crypto.subtle.importKey(
+          'raw', enc.encode(p1), 'PBKDF2', false, ['deriveKey']
+        );
+        const key = await window.crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: salt, iterations: iterations, hash: 'SHA-256' },
+          baseKey,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['encrypt']
+        );
+
+        const ciphertextBuf = await window.crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: iv }, key, innerJsonBytes
+        );
+
+        const vaultData = {
+          version: 1,
+          cipher: 'AES-256-GCM',
+          kdf: 'PBKDF2-HMAC-SHA256',
+          iterations: iterations,
+          salt: arrayBufferToBase64(salt),
+          iv: arrayBufferToBase64(iv),
+          ciphertext: arrayBufferToBase64(ciphertextBuf),
+          public_title: title,
+          public_hint: hint,
+          max_attempts: 5,
+          sealed_at: createdAt
+        };
+
+        // Construct standalone HTML
+        const html = buildStandaloneHtml(vaultData);
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const safeBase = (filename ? filename.replace(/\.[^.]+$/, '') : 'sealed-note').replace(/[^a-zA-Z0-9_-]/g, '_');
+        a.href = url;
+        a.download = `${safeBase}.vault.html`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        showToast();
+      } catch (err) {
+        alert('Sealing error: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitText.textContent = 'Seal & Download Standalone Vault';
+      }
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    function buildStandaloneHtml(vaultData) {
+      // Complete self-contained decryptor HTML generator
+      const jsonStr = JSON.stringify(vaultData, null, 2).replace(/<\/script>/g, '<\\/script>');
+      const safeTitle = (vaultData.public_title || 'Witness Vault').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data: blob:; font-src data:;">
+  <title>${safeTitle} | Witness Vault</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --card-border: rgba(56, 189, 248, 0.18);
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.25);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.2);
+      --rose: #f43f5e;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px;
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow);
+      overflow: hidden;
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .header { padding: 2rem 2rem 1.25rem; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+    .logo-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 52px; height: 52px; border-radius: 14px;
+      background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.3);
+      color: var(--accent); margin-bottom: 1rem;
+    }
+    .vault-title { font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: 0.35rem; }
+    .vault-sub { font-size: 0.85rem; color: var(--text-muted); }
+    .public-hint {
+      margin-top: 0.85rem; display: inline-block; font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.15);
+      padding: 0.35rem 0.85rem; border-radius: 8px; color: #cbd5e1;
+    }
+    .body { padding: 2rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    input[type="password"], input[type="text"] {
+      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff; padding: 0.85rem 3rem 0.85rem 1rem; border-radius: 10px; font-size: 1rem;
+      font-family: var(--mono); outline: none; transition: all 0.2s;
+    }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .toggle-pwd {
+      position: absolute; right: 0.75rem; background: none; border: none;
+      color: var(--text-muted); cursor: pointer; padding: 0.25rem; display: flex; align-items: center;
+    }
+    .toggle-pwd:hover { color: #fff; }
+    .btn {
+      width: 100%; background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+      color: #fff; border: none; border-radius: 10px; padding: 0.9rem; font-size: 0.95rem;
+      font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 0.5rem; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); transition: all 0.2s;
+    }
+    .btn:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .error-msg {
+      margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.3); color: #fda4af; border-radius: 8px;
+      font-size: 0.85rem; display: none; align-items: center; gap: 0.5rem;
+    }
+    .specs-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;
+      margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .spec-item { font-size: 0.75rem; color: var(--text-muted); }
+    .spec-val { font-family: var(--mono); color: #cbd5e1; font-weight: 500; margin-top: 0.15rem; word-break: break-all; }
+    .unlocked-view { display: none; animation: fadeIn 0.4s ease-out; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem; background: var(--emerald-glow);
+      border: 1px solid rgba(16, 185, 129, 0.4); color: var(--emerald); padding: 0.35rem 0.85rem;
+      border-radius: 999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 1.25rem;
+    }
+    .payload-card {
+      background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem;
+    }
+    .content-box {
+      font-family: var(--mono); font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap;
+      word-break: break-word; color: #e2e8f0; max-height: 400px; overflow-y: auto; padding: 0.5rem;
+    }
+    .file-box {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .file-meta { display: flex; align-items: center; gap: 0.75rem; }
+    .file-icon { color: var(--accent); }
+    .file-name { font-weight: 600; font-size: 0.95rem; color: #fff; }
+    .file-size { font-size: 0.8rem; color: var(--text-muted); font-family: var(--mono); }
+    .btn-download {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff;
+      border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;
+      text-decoration: none;
+    }
+    .action-row { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+    .btn-secondary {
+      flex: 1; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1; padding: 0.65rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    }
+    .btn-danger { color: #fda4af; border-color: rgba(244, 63, 94, 0.3); }
+    .btn-danger:hover { background: rgba(244, 63, 94, 0.15); color: #fff; }
+    .footer-bar { margin-top: 1.5rem; font-size: 0.75rem; color: var(--text-muted); text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-badge">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h1 class="vault-title" id="vaultTitle">${safeTitle}</h1>
+      <p class="vault-sub">Zero-Install Air-Gapped Decryption Engine</p>
+      <div class="public-hint" id="hintBox" style="display: none;"></div>
+    </div>
+    <div class="body" id="lockedScreen">
+      <form id="unlockForm" onsubmit="handleUnlock(event)">
+        <div class="form-group">
+          <label for="passphraseInput">Decryption Passphrase</label>
+          <div class="input-wrapper">
+            <input type="password" id="passphraseInput" placeholder="Enter passphrase..." required autofocus>
+            <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn" id="unlockBtn">Unseal Vault</button>
+        <div class="error-msg" id="errorMsg">Incorrect passphrase or corrupted data.</div>
+      </form>
+      <div class="specs-grid">
+        <div class="spec-item"><div>CIPHER</div><div class="spec-val">AES-256-GCM</div></div>
+        <div class="spec-item"><div>KEY DERIVATION</div><div class="spec-val">PBKDF2-HMAC-SHA256</div></div>
+        <div class="spec-item"><div>PBKDF2 ROUNDS</div><div class="spec-val" id="specRounds">600,000</div></div>
+        <div class="spec-item"><div>SEALED AT</div><div class="spec-val" id="specTimestamp">--</div></div>
+      </div>
+    </div>
+    <div class="body unlocked-view" id="unlockedScreen">
+      <div class="status-badge">Cryptographic Integrity Verified (SHA-256)</div>
+      <div class="payload-card" id="payloadContainer"></div>
+      <div class="action-row">
+        <button class="btn-secondary" id="copyBtn" onclick="copyContent()" style="display: none;">Copy Payload</button>
+        <button class="btn-secondary" onclick="lockVault()">Re-lock</button>
+        <button class="btn-secondary btn-danger" onclick="burnMemory()">Zeroize Memory</button>
+      </div>
+      <div class="specs-grid">
+        <div class="spec-item"><div>PAYLOAD SHA-256</div><div class="spec-val" id="payloadSha256">--</div></div>
+        <div class="spec-item"><div>MIME TYPE</div><div class="spec-val" id="payloadMime">--</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar">Air-gapped &amp; 100% Client-Side. No telemetry or server calls.</div>
+  <script id="witness-vault-payload" type="application/json">
+${jsonStr}
+  <\/script>
+  <script>
+    let vaultData = null;
+    let decryptedCache = null;
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        vaultData = JSON.parse(document.getElementById('witness-vault-payload').textContent);
+        if (vaultData.public_hint) {
+          const h = document.getElementById('hintBox');
+          h.textContent = 'Hint: ' + vaultData.public_hint;
+          h.style.display = 'inline-block';
+        }
+        if (vaultData.sealed_at) document.getElementById('specTimestamp').textContent = new Date(vaultData.sealed_at).toLocaleString();
+        if (vaultData.iterations) document.getElementById('specRounds').textContent = vaultData.iterations.toLocaleString() + ' rounds';
+      } catch(e) {}
+    });
+    function togglePasswordVisibility() {
+      const p = document.getElementById('passphraseInput');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    }
+    function b64ToUint8(b64) {
+      const bin = atob(b64);
+      const b = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+      return b;
+    }
+    function bufferToHex(buf) {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    async function handleUnlock(e) {
+      e.preventDefault();
+      const pwd = document.getElementById('passphraseInput').value;
+      const btn = document.getElementById('unlockBtn');
+      const err = document.getElementById('errorMsg');
+      btn.disabled = true;
+      btn.textContent = 'Decrypting...';
+      err.style.display = 'none';
+
+      try {
+        const salt = b64ToUint8(vaultData.salt);
+        const iv = b64ToUint8(vaultData.iv);
+        const ct = b64ToUint8(vaultData.ciphertext);
+        const iterations = vaultData.iterations || 600000;
+
+        const enc = new TextEncoder();
+        const baseKey = await window.crypto.subtle.importKey('raw', enc.encode(pwd), 'PBKDF2', false, ['deriveKey']);
+        const key = await window.crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt, iterations, hash: 'SHA-256' },
+          baseKey,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['decrypt']
+        );
+        const decrypted = await window.crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+        const inner = JSON.parse(new TextDecoder().decode(decrypted));
+        const rawBytes = b64ToUint8(inner.data_b64);
+
+        const shaBuf = await window.crypto.subtle.digest('SHA-256', rawBytes);
+        const shaHex = bufferToHex(shaBuf);
+        if (inner.sha256 && shaHex.toLowerCase() !== inner.sha256.toLowerCase()) {
+          throw new Error('Integrity check failed');
+        }
+
+        decryptedCache = { ...inner, rawBytes, sha256: shaHex };
+        renderUnlocked(decryptedCache);
+      } catch (errExp) {
+        err.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Unseal Vault';
+      }
+    }
+    function renderUnlocked(data) {
+      document.getElementById('lockedScreen').style.display = 'none';
+      document.getElementById('unlockedScreen').style.display = 'block';
+      document.getElementById('payloadSha256').textContent = data.sha256;
+      document.getElementById('payloadMime').textContent = data.mime_type || 'text/plain';
+      const c = document.getElementById('payloadContainer');
+      c.innerHTML = '';
+      const isText = (data.mime_type && data.mime_type.startsWith('text/')) || !data.filename;
+      if (isText) {
+        document.getElementById('copyBtn').style.display = 'flex';
+        const box = document.createElement('div');
+        box.className = 'content-box';
+        box.textContent = new TextDecoder().decode(data.rawBytes);
+        c.appendChild(box);
+      } else {
+        document.getElementById('copyBtn').style.display = 'none';
+        const blob = new Blob([data.rawBytes], { type: data.mime_type || 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const f = document.createElement('div');
+        f.className = 'file-box';
+        f.innerHTML = \`<div class="file-meta">
+          <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          <div>
+            <div class="file-name">\${data.filename || 'vault-payload'}</div>
+            <div class="file-size">\${(data.rawBytes.length / 1024).toFixed(1)} KB &bull; \${data.mime_type}</div>
+          </div>
+        </div>
+        <a class="btn-download" href="\${url}" download="\${data.filename || 'vault-payload'}">Download</a>\`;
+        c.appendChild(f);
+      }
+    }
+    function copyContent() {
+      if (!decryptedCache) return;
+      navigator.clipboard.writeText(new TextDecoder().decode(decryptedCache.rawBytes)).then(() => {
+        const b = document.getElementById('copyBtn');
+        b.textContent = 'Copied!';
+        setTimeout(() => b.textContent = 'Copy Payload', 2000);
+      });
+    }
+    function lockVault() {
+      decryptedCache = null;
+      document.getElementById('passphraseInput').value = '';
+      document.getElementById('unlockedScreen').style.display = 'none';
+      document.getElementById('lockedScreen').style.display = 'block';
+    }
+    function burnMemory() {
+      if (decryptedCache && decryptedCache.rawBytes) decryptedCache.rawBytes.fill(0);
+      decryptedCache = null;
+      document.body.innerHTML = '<div class="container" style="text-align:center;padding:3rem;"><h2 style="color:#fff;">Vault Zeroized</h2><p style="color:#94a3b8;margin-top:0.5rem;">RAM scrubbed. Close window to complete.</p></div>';
+    }
+  <\/script>
+</body>
+</html>`;
+    }
+  </script>
+</body>
+</html>
