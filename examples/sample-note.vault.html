@@ -7,16 +7,19 @@
   <title>Classified Runbook | Witness Vault</title>
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: rgba(17, 24, 39, 0.75);
-      --card-border: rgba(56, 189, 248, 0.18);
-      --accent: #06b6d4;
-      --accent-glow: rgba(6, 182, 212, 0.25);
+      --bg: #120e0b;
+      --card-bg: rgba(26, 20, 16, 0.85);
+      --card-border: rgba(245, 158, 11, 0.22);
+      --accent: #f59e0b;
+      --accent-glow: rgba(245, 158, 11, 0.25);
+      --gold: #fbbf24;
+      --gold-glow: rgba(251, 191, 36, 0.2);
+      --brass: #d97706;
       --emerald: #10b981;
       --emerald-glow: rgba(16, 185, 129, 0.2);
       --rose: #f43f5e;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
+      --text: #fbf8f2;
+      --text-muted: #a89f91;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
@@ -26,8 +29,8 @@
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.16) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(217, 119, 6, 0.08) 0%, transparent 40%);
       color: var(--text);
       font-family: var(--sans);
       min-height: 100vh;
@@ -47,7 +50,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-radius: 16px;
-      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 25px var(--accent-glow);
       overflow: hidden;
       animation: fadeIn 0.4s ease-out;
     }
@@ -70,8 +73,8 @@
       width: 52px;
       height: 52px;
       border-radius: 14px;
-      background: rgba(6, 182, 212, 0.12);
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
       color: var(--accent);
       margin-bottom: 1rem;
     }
@@ -94,10 +97,10 @@
       display: inline-block;
       font-size: 0.8rem;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border: 1px dashed rgba(245, 158, 11, 0.25);
       padding: 0.35rem 0.85rem;
       border-radius: 8px;
-      color: #cbd5e1;
+      color: #e5dccf;
     }
 
     .body {
@@ -127,7 +130,7 @@
     input[type="password"], input[type="text"] {
       width: 100%;
       background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.18);
       color: #fff;
       padding: 0.85rem 3rem 0.85rem 1rem;
       border-radius: 10px;
@@ -159,13 +162,13 @@
 
     .btn {
       width: 100%;
-      background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
-      color: #fff;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #0d0a08;
       border: none;
       border-radius: 10px;
       padding: 0.9rem;
       font-size: 0.95rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.02em;
       cursor: pointer;
       display: flex;
@@ -173,12 +176,13 @@
       justify-content: center;
       gap: 0.5rem;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+      box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35);
     }
 
     .btn:hover:not(:disabled) {
-      filter: brightness(1.1);
+      filter: brightness(1.12);
       transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(245, 158, 11, 0.45);
     }
 
     .btn:disabled {
@@ -239,9 +243,9 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      background: var(--emerald-glow);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: var(--emerald);
+      background: var(--gold-glow);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: var(--gold);
       padding: 0.35rem 0.85rem;
       border-radius: 999px;
       font-size: 0.75rem;
@@ -251,7 +255,7 @@
 
     .payload-card {
       background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.14);
       border-radius: 12px;
       padding: 1.25rem;
       margin-bottom: 1.25rem;
@@ -263,7 +267,7 @@
       line-height: 1.6;
       white-space: pre-wrap;
       word-break: break-word;
-      color: #e2e8f0;
+      color: #f5eedf;
       max-height: 400px;
       overflow-y: auto;
       padding: 0.5rem;
@@ -277,7 +281,7 @@
       padding: 0.75rem;
       background: rgba(255, 255, 255, 0.03);
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(245, 158, 11, 0.12);
     }
 
     .file-meta {
@@ -303,22 +307,23 @@
     }
 
     .btn-download {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #fff;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #0d0a08;
       border: none;
       padding: 0.6rem 1.2rem;
       border-radius: 8px;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 0.4rem;
       text-decoration: none;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
       transition: filter 0.2s;
     }
 
-    .btn-download:hover { filter: brightness(1.1); }
+    .btn-download:hover { filter: brightness(1.12); }
 
     .action-row {
       display: flex;
@@ -518,13 +523,13 @@
   "cipher": "AES-256-GCM",
   "kdf": "PBKDF2-HMAC-SHA256",
   "iterations": 600000,
-  "salt": "pAsEOaEf8Tr3vtnrx7EY8A==",
-  "iv": "VJMETYFRj79ynJr3",
-  "ciphertext": "MBkCAh3Wrk1qpx1vssIFlD0gysYjDT6o7vuPUpATvoTgJw4TsM+wi03C2ILURCkURyb438Q9/o6sv8+hDQk/c545nGPJcxs5ujy1mB78gMxlprNjIkLEGr1BS1jR0U3vC6URLVhj1iVBW/Cg79MIl+sWRmCudIqEBM6S0gs9VK/zfPiES6O0kStdC/jMYBcYUaD5NCaFBXztP8OggRvMW9AZIyyE+BVWfeW6HApjbAPoSt8K3LKhHpqacgyrDcMEgq9kvC0q0Su/nfvKfKnK15A2W+GD9V2t3c2kM24byciaD7VO8qrYUz8OfOyQ/G9KrD95c3W+Quux6JdYl4qS4w9qkCC9qERCNof6GK5/atG1x4VX8oDLbmFK6V1QVSKW0NclP+UTjLvEUviKHo7K1xwYsIrKtxFNmdw7OBWQR5hz0AxwfoxC/7xFOfpoWJgSafWHyaJTcrcUZLD2bJ39L6NqZPsrx8fNkxv63nLL1zKbbJMhCs3xfy9nPGhR+w3MunwhG/Y3CCHiKDKzFyAr6D/jAOR7smaARywpdRboB7Z0Ru8PavqDtRk2BkGqKN424shcRBc8C123eCViBKGFw1PVNjEyD09Hd06DlFUNDbTXl/nt+fT57Phc+YF3b8aJ6kCOYmduCJ8NW5IvRmy0GTmb2OxJXH3qDRtd1vGyUITDB95uc+ka+6lvVlk6XGvRVRqOgtMv+7mzt8vF/q4ZC25PTGaHXqvAEu2OX61+gCIAiZf51msiPjMRQvU7XJ0VNr7atQTTDzgms7At/mnZH/0NvabeYELqvXukbETAQljbFJ5AbGMzJRvejWnSzd3VXzWqm9xEaZxPATP7W6+5CJI6uXdx5XrbRTJ63tRLhDwSPSrTAkjSc4qIz9OMAxnaEJDGi0dXg4H1UIeGBbil+mP/0vBJ4BapyL8JyfPAZ2zjTdidZW7FbjPPc0OPNv0HCI8xphx6AlVUTDQITmCGDQzJ2R4bDvMtC8+L3uYdMzxvuk5DhtJHEqdvAqv7lcdYqkbQHNZHIdYkJD55vqB/dVpXKc8NaSam+hj9ZWVVJ7gWWJzLkq9G9JadCZ9xDiOvdMt9siu2VgDRcgnGqy3kBa+Xtpwx3Pu8YFx/5AWebw98TuCqa+zzQV8Hwf2k01QRcgfNAA6rexbzl87vhoKRnV+k1hGdArW4q2J8gB2R8Ue89jIeIDbxCzJSClTGZtd9j94OhMe3cvkxMW05CioXwBBJbJ6OgYulRWV9dQ==",
+  "salt": "28i/4kjCJJ7GMrneXLXZyQ==",
+  "iv": "ZfLSEtuGysryGkH+",
+  "ciphertext": "DBjzCV/APi29yJ8EKJ9ZHWBrVRdGKa9a7y/W4Fuhckkx30RXZBKvzxTzBl2Gc8woQIowHg9FlHvdpuyULz640KJxVjhTJYD64crO5R6DZQ3aVAZ0HmRToPIEZV+beIxdA3z9zqFB8SAj5SNCRMQrLU0QlDi4BkgOP/4H2yw+thO2sb75t25ILV/PPe8O+ExT17QOCEHaPPMv7QYMGiIrdqgDUSWzB+Q+ICHDCtsPGm9WNhyKmvNlz/WuoD7jKwhNEP9sRuMzghFJfd0zTMVyQkwuF8oZWhqQu9sFsTczgDpW4A3nYXftLVCoO4GSSdGfNItuKkFHIr9Uf54W3zrGuUVAl/hxReG14a2oZUxYz2OldaR1tvc6+8vKpYCU6XG1+FbrXIkrRstG8sfWKOqTugb3PNK+3mgywPTvPtHKjDSrZYGiI91IRqlDZSuB9ToYLuuEXSotFpW8KYb5oWf2UugqrBGtH81Dca+WBF7LwkvwSKWtgw+A8fxTo2RI6VvJRbS9Y1H+4fsaA0rDTPiMy+l/q3y7byLRwlRe5WEJ/HV/SidQBxDaFVYtch8W/mbjiEi5L0qOrHG4TjW1yPFy8MCmJErdH9iPPXn290izmBYxBctOdbwA6TCP6BXHxRaTP/Rp3V/R7AD4NTeZYLNUSjX0mqNvjCv3VwOVM46AYAzHDAK2gETFbE+MrjPw/+Gy1fQ3fvHT8UJJOXHUviCeWwMgbmZ6SVSFc9Q72ZxW0OWHXz4h5gac57AU+qqzdhA5sPFQ+fYv6MjvwHQQ2/MHv5hWDi7RW9Kf25b8ntYHuW2t4A3MEN2FKJbIUG3DH8XPHDhCPPN00jLSolHlcRBoc2tbH05Z3FhKLKI66TDJu7su2vMCMwJb7H3BRhv+5jXbcFe0r4y5Gd+VSLHVazMEDUDYOKaiKlWKgtfLCkoUCgOHS8e0yPsxBSLrM2DRcDua0zBnYxwL9HQMtOHSDg8g6oA7UkrhGWFJFuJRHJWWX8CizQG33gY+cUY0WZNIJRERnx97sqDcoNaa1f9HGEa4r9894kGx2sFm63i17lmA2W/753hLBceJnMItCQZjffOlbUn2GrUjZmAQVcrByN1lNLtd88ZJCpMOgm4rvBGq4X0qYdGtJ+H1Ts8o1WYvFjZmrnI9Qkg0CPGEAx/r5DBHx1oJCH/FFg4QjRLBRBF2OU49ny18C6mbgd2BdPkHCbvF7ByNSf15+9w1nPJ95is/6sqef6NzsJq/dU03bw==",
   "public_title": "Classified Runbook",
   "public_hint": "Year of launch",
   "max_attempts": 5,
-  "sealed_at": "2026-10-01T12:18:53.559274+00:00"
+  "sealed_at": "2026-10-01T13:14:23.404216+00:00"
 }
   </script>
 

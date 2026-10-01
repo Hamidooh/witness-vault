@@ -16,16 +16,19 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   <title>__TITLE__ | Witness Vault</title>
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: rgba(17, 24, 39, 0.75);
-      --card-border: rgba(56, 189, 248, 0.18);
-      --accent: #06b6d4;
-      --accent-glow: rgba(6, 182, 212, 0.25);
+      --bg: #120e0b;
+      --card-bg: rgba(26, 20, 16, 0.85);
+      --card-border: rgba(245, 158, 11, 0.22);
+      --accent: #f59e0b;
+      --accent-glow: rgba(245, 158, 11, 0.25);
+      --gold: #fbbf24;
+      --gold-glow: rgba(251, 191, 36, 0.2);
+      --brass: #d97706;
       --emerald: #10b981;
       --emerald-glow: rgba(16, 185, 129, 0.2);
       --rose: #f43f5e;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
+      --text: #fbf8f2;
+      --text-muted: #a89f91;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
@@ -35,8 +38,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.16) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(217, 119, 6, 0.08) 0%, transparent 40%);
       color: var(--text);
       font-family: var(--sans);
       min-height: 100vh;
@@ -56,7 +59,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-radius: 16px;
-      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 25px var(--accent-glow);
       overflow: hidden;
       animation: fadeIn 0.4s ease-out;
     }
@@ -79,8 +82,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       width: 52px;
       height: 52px;
       border-radius: 14px;
-      background: rgba(6, 182, 212, 0.12);
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
       color: var(--accent);
       margin-bottom: 1rem;
     }
@@ -103,10 +106,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       display: inline-block;
       font-size: 0.8rem;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border: 1px dashed rgba(245, 158, 11, 0.25);
       padding: 0.35rem 0.85rem;
       border-radius: 8px;
-      color: #cbd5e1;
+      color: #e5dccf;
     }
 
     .body {
@@ -136,7 +139,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     input[type="password"], input[type="text"] {
       width: 100%;
       background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.18);
       color: #fff;
       padding: 0.85rem 3rem 0.85rem 1rem;
       border-radius: 10px;
@@ -168,13 +171,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .btn {
       width: 100%;
-      background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
-      color: #fff;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #0d0a08;
       border: none;
       border-radius: 10px;
       padding: 0.9rem;
       font-size: 0.95rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.02em;
       cursor: pointer;
       display: flex;
@@ -182,12 +185,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       justify-content: center;
       gap: 0.5rem;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+      box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35);
     }
 
     .btn:hover:not(:disabled) {
-      filter: brightness(1.1);
+      filter: brightness(1.12);
       transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(245, 158, 11, 0.45);
     }
 
     .btn:disabled {
@@ -248,9 +252,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      background: var(--emerald-glow);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: var(--emerald);
+      background: var(--gold-glow);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: var(--gold);
       padding: 0.35rem 0.85rem;
       border-radius: 999px;
       font-size: 0.75rem;
@@ -260,7 +264,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .payload-card {
       background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.14);
       border-radius: 12px;
       padding: 1.25rem;
       margin-bottom: 1.25rem;
@@ -272,7 +276,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       line-height: 1.6;
       white-space: pre-wrap;
       word-break: break-word;
-      color: #e2e8f0;
+      color: #f5eedf;
       max-height: 400px;
       overflow-y: auto;
       padding: 0.5rem;
@@ -286,7 +290,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       padding: 0.75rem;
       background: rgba(255, 255, 255, 0.03);
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(245, 158, 11, 0.12);
     }
 
     .file-meta {
@@ -312,22 +316,23 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
 
     .btn-download {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #fff;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #0d0a08;
       border: none;
       padding: 0.6rem 1.2rem;
       border-radius: 8px;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 0.4rem;
       text-decoration: none;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
       transition: filter 0.2s;
     }
 
-    .btn-download:hover { filter: brightness(1.1); }
+    .btn-download:hover { filter: brightness(1.12); }
 
     .action-row {
       display: flex;

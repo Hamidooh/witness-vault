@@ -6,15 +6,17 @@
   <title>Witness Vault | Air-Gapped Vault Builder</title>
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: rgba(17, 24, 39, 0.75);
-      --card-border: rgba(56, 189, 248, 0.18);
-      --accent: #06b6d4;
-      --accent-glow: rgba(6, 182, 212, 0.25);
+      --bg: #120e0b;
+      --card-bg: rgba(26, 20, 16, 0.85);
+      --card-border: rgba(245, 158, 11, 0.22);
+      --accent: #f59e0b;
+      --accent-glow: rgba(245, 158, 11, 0.25);
+      --gold: #fbbf24;
+      --brass: #d97706;
       --emerald: #10b981;
       --rose: #f43f5e;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
+      --text: #fbf8f2;
+      --text-muted: #a89f91;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
@@ -24,8 +26,8 @@
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.16) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(217, 119, 6, 0.08) 0%, transparent 40%);
       color: var(--text);
       font-family: var(--sans);
       min-height: 100vh;
@@ -61,8 +63,8 @@
       width: 58px;
       height: 58px;
       border-radius: 16px;
-      background: rgba(6, 182, 212, 0.12);
-      border: 1px solid rgba(6, 182, 212, 0.35);
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
       color: var(--accent);
       margin-bottom: 1rem;
     }
@@ -83,7 +85,7 @@
     .tabs {
       display: flex;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.25);
     }
 
     .tab-btn {
@@ -106,7 +108,7 @@
     .tab-btn.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
-      background: rgba(6, 182, 212, 0.05);
+      background: rgba(245, 158, 11, 0.08);
     }
 
     .body {
@@ -166,7 +168,7 @@
 
     .drop-zone:hover, .drop-zone.dragover {
       border-color: var(--accent);
-      background: rgba(6, 182, 212, 0.06);
+      background: rgba(245, 158, 11, 0.08);
     }
 
     .drop-zone svg {
@@ -190,10 +192,10 @@
       display: none;
       margin-top: 1rem;
       padding: 0.75rem 1rem;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
       border-radius: 8px;
-      color: #a7f3d0;
+      color: #fde68a;
       font-size: 0.85rem;
       align-items: center;
       justify-content: space-between;
@@ -207,26 +209,27 @@
 
     .btn-submit {
       width: 100%;
-      background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
-      color: #fff;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #0d0a08;
       border: none;
       border-radius: 10px;
       padding: 1rem;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.38);
       transition: all 0.2s;
       margin-top: 0.5rem;
     }
 
     .btn-submit:hover:not(:disabled) {
-      filter: brightness(1.1);
+      filter: brightness(1.12);
       transform: translateY(-1px);
+      box-shadow: 0 6px 25px rgba(245, 158, 11, 0.48);
     }
 
     .btn-submit:disabled {
@@ -573,23 +576,25 @@
   <title>${safeTitle} | Witness Vault</title>
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: rgba(17, 24, 39, 0.75);
-      --card-border: rgba(56, 189, 248, 0.18);
-      --accent: #06b6d4;
-      --accent-glow: rgba(6, 182, 212, 0.25);
+      --bg: #120e0b;
+      --card-bg: rgba(26, 20, 16, 0.85);
+      --card-border: rgba(245, 158, 11, 0.22);
+      --accent: #f59e0b;
+      --accent-glow: rgba(245, 158, 11, 0.25);
+      --gold: #fbbf24;
+      --gold-glow: rgba(251, 191, 36, 0.2);
+      --brass: #d97706;
       --emerald: #10b981;
-      --emerald-glow: rgba(16, 185, 129, 0.2);
       --rose: #f43f5e;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
+      --text: #fbf8f2;
+      --text-muted: #a89f91;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: var(--bg);
-      background-image: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+      background-image: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.16) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(217, 119, 6, 0.08) 0%, transparent 40%);
       color: var(--text);
       font-family: var(--sans);
       min-height: 100vh;
@@ -608,7 +613,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-radius: 16px;
-      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 25px var(--accent-glow);
       overflow: hidden;
       animation: fadeIn 0.4s ease-out;
     }
@@ -620,22 +625,22 @@
     .logo-badge {
       display: inline-flex; align-items: center; justify-content: center;
       width: 52px; height: 52px; border-radius: 14px;
-      background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.3);
+      background: rgba(245, 158, 11, 0.14); border: 1px solid rgba(245, 158, 11, 0.35);
       color: var(--accent); margin-bottom: 1rem;
     }
     .vault-title { font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: 0.35rem; }
     .vault-sub { font-size: 0.85rem; color: var(--text-muted); }
     .public-hint {
       margin-top: 0.85rem; display: inline-block; font-size: 0.8rem;
-      background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.15);
-      padding: 0.35rem 0.85rem; border-radius: 8px; color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(245, 158, 11, 0.25);
+      padding: 0.35rem 0.85rem; border-radius: 8px; color: #e5dccf;
     }
     .body { padding: 2rem; }
     .form-group { margin-bottom: 1.25rem; }
     label { display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem; }
     .input-wrapper { position: relative; display: flex; align-items: center; }
     input[type="password"], input[type="text"] {
-      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.12);
+      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(245, 158, 11, 0.18);
       color: #fff; padding: 0.85rem 3rem 0.85rem 1rem; border-radius: 10px; font-size: 1rem;
       font-family: var(--mono); outline: none; transition: all 0.2s;
     }
@@ -646,12 +651,12 @@
     }
     .toggle-pwd:hover { color: #fff; }
     .btn {
-      width: 100%; background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
-      color: #fff; border: none; border-radius: 10px; padding: 0.9rem; font-size: 0.95rem;
-      font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      gap: 0.5rem; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); transition: all 0.2s;
+      width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #0d0a08; border: none; border-radius: 10px; padding: 0.9rem; font-size: 0.95rem;
+      font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 0.5rem; box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35); transition: all 0.2s;
     }
-    .btn:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn:hover:not(:disabled) { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(245, 158, 11, 0.45); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .error-msg {
       margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(244, 63, 94, 0.12);
@@ -666,32 +671,32 @@
     .spec-val { font-family: var(--mono); color: #cbd5e1; font-weight: 500; margin-top: 0.15rem; word-break: break-all; }
     .unlocked-view { display: none; animation: fadeIn 0.4s ease-out; }
     .status-badge {
-      display: inline-flex; align-items: center; gap: 0.4rem; background: var(--emerald-glow);
-      border: 1px solid rgba(16, 185, 129, 0.4); color: var(--emerald); padding: 0.35rem 0.85rem;
+      display: inline-flex; align-items: center; gap: 0.4rem; background: var(--gold-glow);
+      border: 1px solid rgba(245, 158, 11, 0.4); color: var(--gold); padding: 0.35rem 0.85rem;
       border-radius: 999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 1.25rem;
     }
     .payload-card {
-      background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(245, 158, 11, 0.14);
       border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem;
     }
     .content-box {
       font-family: var(--mono); font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap;
-      word-break: break-word; color: #e2e8f0; max-height: 400px; overflow-y: auto; padding: 0.5rem;
+      word-break: break-word; color: #f5eedf; max-height: 400px; overflow-y: auto; padding: 0.5rem;
     }
     .file-box {
       display: flex; align-items: center; justify-content: space-between; gap: 1rem;
       padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(245, 158, 11, 0.12);
     }
     .file-meta { display: flex; align-items: center; gap: 0.75rem; }
     .file-icon { color: var(--accent); }
     .file-name { font-weight: 600; font-size: 0.95rem; color: #fff; }
     .file-size { font-size: 0.8rem; color: var(--text-muted); font-family: var(--mono); }
     .btn-download {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #0d0a08;
       border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-size: 0.85rem;
-      font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;
-      text-decoration: none;
+      font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); text-decoration: none;
     }
     .action-row { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
     .btn-secondary {
